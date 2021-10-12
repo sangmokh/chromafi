@@ -4,7 +4,8 @@ const camelCase = require('camelcase')
 const chalk = require('chalk')
 const stripAnsi = require('strip-ansi')
 const merge = require('deepmerge')
-const ansiMark = require('ansi-mark')
+// Remove ansi-mark so we don't need to fix audit issues there. The highlight option is not required.
+// const ansiMark = require('ansi-mark')
 const stripIndent = require('strip-indent')
 const detectIndent = require('detect-indent')
 
@@ -137,7 +138,7 @@ const syntaxHlStr = (lang, script, opts, indentStart) => {
 		script = indentStr + script
 	}
 
-	const code = hljs.highlight(lang, script).value
+	const code = hljs.highlight(script, {language: lang}).value
 	const lines = code.split('\n')
 
 	lines.forEach((line, lineNumber) => {
@@ -326,9 +327,6 @@ const cropPadAndNumber = (text, opts) => {
 }
 
 const decorate = (ansiStr, opts) => {
-	if (opts.highlight) {
-		ansiStr = ansiMark(ansiStr, opts.highlight)
-	}
 	ansiStr = cropPadAndNumber(ansiStr, opts)
 	return ansiStr
 }
